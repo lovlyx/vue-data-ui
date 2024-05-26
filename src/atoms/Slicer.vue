@@ -70,19 +70,10 @@ function reset() {
 
 <template>
     <div class="vue-data-ui-slicer" data-html2canvas-ignore>
-        <div class="vue-data-ui-slicer-labels">
-            <div class="vue-data-ui-slicer-label-left" :style="`font-size:${props.fontSize}px;color:${props.textColor}`">
-                {{ labelLeft }}
-            </div>
-            <div v-if="valueStart > 0 || valueEnd < max">
-                <button v-if="!useResetSlot" data-cy-reset tabindex="0" role="button" class="vue-data-ui-refresh-button" @click="reset()">
-                    <BaseIcon name="refresh" :stroke="textColor"/>
-                </button>
-                <slot v-else name="reset-action" v-bind="{ reset }"/>
-            </div>
-            <div class="vue-data-ui-slicer-label-right" :style="`font-size:${props.fontSize}px;color:${props.textColor}`">
-                {{ labelRight }}
-            </div>
+        <div
+            class="vue-data-ui-slicer-label-left"
+            :style="`font-size:${props.fontSize}px;color:${props.textColor}`">
+            {{ labelLeft }}
         </div>
         <div class="vue-data-ui-slicer-knobs">
             <div ref="REF_SLICER" class="vue-data-ui-slicer-track"/>
@@ -105,22 +96,39 @@ function reset() {
                 @input="emit('update:end', $event.target.value)"
             >
         </div>
+        <div
+            class="vue-data-ui-slicer-label-right"
+            :style="`font-size:${props.fontSize}px;color:${props.textColor}`">
+            {{ labelRight }}
+        </div>
+        <div v-if="valueStart > 0 || valueEnd < max" class="vue-data-ui-slicer-reset">
+            <button
+                v-if="!useResetSlot"
+                data-cy-reset
+                tabindex="0"
+                role="button"
+                class="vue-data-ui-refresh-button"
+                @click="reset()">
+                <BaseIcon name="refresh" :stroke="textColor" />
+            </button>
+            <slot v-else name="reset-action" v-bind="{ reset }" />
+        </div>
     </div>
 </template>
 
 <style scoped lang="scss">
 .vue-data-ui-slicer {
-    position: relative;
+    width: 100%;
+    margin: 0 auto;
     display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 0 24px;
-    margin-bottom: 24px;
+    flex-direction: row;
+    gap: 6px;
+    align-items: center;
 }
 
 .vue-data-ui-slicer-knobs {
     position: relative;
-    width: calc(100% - 48px);
+    width: 100%;
     margin: 0 auto;
     height: 12px;
 }
@@ -217,22 +225,18 @@ input[type="range"]:active::-webkit-slider-thumb{
     }
 }
 
-.vue-data-ui-slicer-labels {
-    display: flex;
-    flex-direction: row;
-    align-items:center;
-    padding: 0 24px;
-    height: 40px;
-}
-
 .vue-data-ui-slicer-label-left,
 .vue-data-ui-slicer-label-right {
     width: 100%;
 }
 .vue-data-ui-slicer-label-left {
-    text-align: left;
+    text-align: right;
 }
 .vue-data-ui-slicer-label-right {
-    text-align: right;
+    text-align: left;
+}
+.vue-data-ui-slicer-reset {
+    position: absolute;
+    right: 0;
 }
 </style>
